@@ -104,7 +104,7 @@ class AddItemView(View):
 
 class ItemOrderView(View):
     def get(self, request, id: int) -> JsonResponse:
-        response = JsonResponse()
+        response = JsonResponse({"status": "OK"})
         #make new order and add item
         order = Order.objects.create()
         order.in_work = True
