@@ -27,7 +27,7 @@ def check_and_create_order(request: HttpRequest) -> dict:
     order, created = Order.objects.get_or_create(uuid=uuid_c)
     if created:
         order.save()
-    if order.to_action:
+    if order.in_work:
         order = Order.objects.create()
         order.save()
 
@@ -43,8 +43,8 @@ class MakeOrderView(View):
             return response
         
         order = Order.objects.get(uuid=uuid_order)
-        if not order.to_action:
-            order.to_action = True
+        if not order.in_work:
+            order.in_work = True
             order.save()
         
         #check order items not empty
@@ -107,7 +107,7 @@ class ItemOrderView(View):
         response = JsonResponse()
         #make new order and add item
         order = Order.objects.create()
-        order.to_action = True
+        order.in_work = True
         order.save()
         try:
             item_object = Item.objects.get(id=id)
