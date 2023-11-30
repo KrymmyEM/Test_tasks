@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'admin_panel.urls'
+ROOT_URLCONF = 'djastri.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'admin_panel.wsgi.application'
+WSGI_APPLICATION = 'djastri.wsgi.application'
 
 
 # Database
