@@ -15,7 +15,7 @@ def error404Json(request, message) -> JsonResponse:
     response.content = json.dumps({"status": "Error", "message": message})
     return response
 
-def error404Http(request, message) -> HttpResponse:
+def error404Http(message) -> HttpResponse:
     response = HttpResponse()
     response.status_code = 404
     response.content = "Error404:" +message
@@ -146,7 +146,7 @@ class ItemView(TemplateView):
         try:
             item_object = Item.objects.get(id=id)
         except Item.DoesNotExist:
-            response = error404Http(response, "Item not found")
+            response = error404Http("Item not found")
             return response
 
         context["item"] = item_object
