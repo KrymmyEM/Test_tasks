@@ -1,5 +1,6 @@
 # Site
 Для нормальной работы сайта вам нужно создать файл .env в каталоге проекта django или использовать файл .env в месте запуска проекта (например docker-compose file)
+
 For normal work site you need make .env file in django project directory or use .env file in where project be started (for example, docker-compose file)
 ### Example .env file
 ```
