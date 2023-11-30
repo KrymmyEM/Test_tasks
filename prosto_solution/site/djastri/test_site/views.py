@@ -124,7 +124,7 @@ class ItemOrderView(View):
             "price": item_object.stripe_price_id,
             "quantity": order_item.quantity
         })
-        stripe.api_key = settings.STRIPE_SECRET_KEY
+        stripe.api_key = settings.SECRET_KEY_STRIPE
         checkout_session = stripe.checkout.Session.create(
             line_items=line_items,
             mode='payment',
