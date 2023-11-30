@@ -25,7 +25,7 @@ DB_ENGINE=django.db.backends.sqlite3
 ```
 все поля DB_, кроме *DB_NAME*, осталять пустыми
 
-**Alert!**
+**Attention!**
 
 In case of use
 ```
