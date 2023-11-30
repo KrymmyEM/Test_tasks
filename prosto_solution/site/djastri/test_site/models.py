@@ -35,7 +35,7 @@ class Item(models.Model):
         #create stripe price
         stripe_price = stripe.Price.create(
             product=stripe_product['id'],
-            unit_amount=self.price,
+            unit_amount=self.price*100,
             currency='rub',
         )
         self.stripe_price_id = stripe_price['id']
