@@ -102,7 +102,7 @@ class Order(models.Model):
     in_work = models.BooleanField(null=False, default=False, verbose_name='В работе')
     stripe_checkout_session_id = models.CharField(max_length=500, null=True, unique=True, editable=False)
     stripe_payment_intent_id = models.CharField(max_length=500, null=True, unique=True, editable=False)
-    orderitem_set = models.ManyToManyField(Item, through='OrderItem')
+    orderitem_set = models.ManyToManyField(Item, through='OrderItem', related_name='order_items')
 
     def __str__(self):
         return str(self.pk) + "|" + str(self.user) 
@@ -113,8 +113,8 @@ class Order(models.Model):
 
 # order_item model, order, item, quantity
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, verbose_name='Предмет')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ', related_name='orders')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, verbose_name='Предмет', related_name='items')
     quantity = models.IntegerField(validators=[
         MinValueValidator(1)
     ], default=1, verbose_name='Количество')
