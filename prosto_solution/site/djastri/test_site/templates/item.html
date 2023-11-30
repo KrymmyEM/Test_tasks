@@ -12,6 +12,7 @@
             }).then(function(session) {
                 // get "session_id" from json
                 let sessionId = session.session_id;
+                let stripe = Stripe("{{settings.PUBLIC_KEY_STRIPE}}");
                 // redirect to stripe checkout page
                 stripe.redirectToCheckout({ sessionId: sessionId });
             }).then(function(result) {
