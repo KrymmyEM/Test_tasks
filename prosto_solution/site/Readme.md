@@ -22,7 +22,7 @@ DATABASE=
 ```
 DB_ENGINE=django.db.backends.sqlite3
 ```
-поля кроме *DB_NAME* осталять пустыми
+все поля DB_, кроме *DB_NAME*, осталять пустыми
 
 **Alert!**
 
