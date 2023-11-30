@@ -31,7 +31,7 @@ In case of use
 ```
 DB_ENGINE=django.db.backends.sqlite3
 ```
-leave fields other than *DB_NAME* empty
+leave all DB_ fields except DB_NAME empty
 
 
 
