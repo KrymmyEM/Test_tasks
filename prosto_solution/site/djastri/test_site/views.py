@@ -74,6 +74,7 @@ class MakeOrderView(View):
         response.set_cookie("orduuid_check", uuid_order)
         return response
 
+
 class AddItemView(View):
     def post(self, request, id: int) -> JsonResponse:
         response = JsonResponse()
@@ -106,7 +107,7 @@ class ItemOrderView(View):
         except Item.DoesNotExist:
             response = error404Json(response, "Item not found")
             return response
-            
+
         order_items = OrderItem.objects.create(order=order, item=item_object)
      
         order_items.save()
