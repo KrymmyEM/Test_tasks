@@ -115,9 +115,9 @@ class ItemOrderView(View):
             response = error404Json(response, "Item not found")
             return response
 
-        order_items = OrderItem.objects.create(order=order, item=item_object)
+        order_item = OrderItem.objects.create(order=order, item=item_object)
      
-        order_items.save()
+        order_item.save()
         #line_items extend in orderitems from order
         line_items = []
         line_items.append({
