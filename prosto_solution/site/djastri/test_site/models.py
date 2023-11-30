@@ -18,8 +18,8 @@ class Item(models.Model):
     price = models.IntegerField(null=False, validators=[
         MinValueValidator(0)
     ])
-    stripe_product_id = models.CharField(max_length=500, null=True)
-    stripe_price_id = models.CharField(max_length=500, null=True)
+    stripe_product_id = models.CharField(max_length=500, null=True, editable=False)
+    stripe_price_id = models.CharField(max_length=500, null=True, editable=False)
 
     def __str__(self):
         return str(self.pk) + "|" + str(self.name)
@@ -47,7 +47,7 @@ class Discount(models.Model):
         MaxValueValidator(100),
         MinValueValidator(0)
     ])
-    stripe_coupon_id = models.CharField(max_length=500, null=True)
+    stripe_coupon_id = models.CharField(max_length=500, null=True, editable=False)
 
     def __str__(self):
         return str(self.pk) + "|" + str(self.name)
@@ -98,8 +98,8 @@ class Order(models.Model):
     discounts = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True)
     tax = models.ForeignKey(Tax, on_delete=models.SET_NULL, null=True)
     to_action = models.BooleanField(null=False, default=False)
-    stripe_checkout_session_id = models.CharField(max_length=500, null=True, unique=True)
-    stripe_payment_intent_id = models.CharField(max_length=500, null=True, unique=True)
+    stripe_checkout_session_id = models.CharField(max_length=500, null=True, unique=True, editable=False)
+    stripe_payment_intent_id = models.CharField(max_length=500, null=True, unique=True, editable=False)
     orderitem_set = models.ManyToManyField(Item, through='OrderItem')
 
     def __str__(self):
