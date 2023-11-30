@@ -13,7 +13,7 @@ def error404Json(request, message) -> JsonResponse:
     response = JsonResponse()
     response.status_code = 404
     response.content = json.dumps({"status": "Error", "message": message})
-    return response
+    return responses
 
 def error404Http(message) -> HttpResponse:
     response = HttpResponse()
@@ -138,16 +138,19 @@ class ItemView(TemplateView):
     template_name = "item.html"
 
     def get(self, request, id: int) -> HttpResponse:
-        return render(request, self.template_name, self.get_context_data(id)) 
+        context = self.get_context_data(id)
+        if context.get("error"):
+            return context.get("error")
+        return render(request, self.template_name, ) 
 
 
     def get_context_data(self, id: int, **kwargs):
         context = super().get_context_data(**kwargs)
+        item_object = None
         try:
             item_object = Item.objects.get(id=id)
         except Item.DoesNotExist:
-            response = error404Http("Item not found")
-            return response
+            context['error'] = error404Http("Item not found")
 
         context["item"] = item_object
         return context
