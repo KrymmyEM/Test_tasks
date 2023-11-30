@@ -18,7 +18,7 @@ def error404Json(request, message) -> JsonResponse:
 def error404Http(message) -> HttpResponse:
     response = HttpResponse()
     response.status_code = 404
-    response.content = "Error404:" +message
+    response.content = "Error404: " +message
     return response
 
 
@@ -141,7 +141,7 @@ class ItemView(TemplateView):
         context = self.get_context_data(id)
         if context.get("error"):
             return context.get("error")
-        return render(request, self.template_name, ) 
+        return render(request, self.template_name, context) 
 
 
     def get_context_data(self, id: int, **kwargs):
