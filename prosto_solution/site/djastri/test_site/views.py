@@ -15,6 +15,12 @@ def error404Json(request, message) -> JsonResponse:
     response.content = json.dumps({"status": "Error", "message": message})
     return response
 
+def error404Http(request, message) -> HttpResponse:
+    response = HttpResponse()
+    response.status_code = 404
+    response.content = "Error404:" +message
+    return response
+
 
 def check_and_create_order(request: HttpRequest) -> dict:
     uuid_c = request.COOKIES.get("orduuid", None)
@@ -101,6 +107,7 @@ class ItemOrderView(View):
         response = JsonResponse()
         #make new order and add item
         order = Order.objects.create()
+        order.to_action = True
         order.save()
         try:
             item_object = Item.objects.get(id=id)
@@ -136,5 +143,11 @@ class ItemView(TemplateView):
 
     def get_context_data(self, id: int, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["message"] = id
+        try:
+            item_object = Item.objects.get(id=id)
+        except Item.DoesNotExist:
+            response = error404Http(response, "Item not found")
+            return response
+
+        context["item"] = item_object
         return context

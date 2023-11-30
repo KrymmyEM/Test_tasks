@@ -2,9 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{item.name}}</title>
+    <script src="https://js.stripe.com/v3/">
+        // after click buy button get session id from server and redirect to stripe checkout page
+        document.getElementById("buy").addEventListener("click", function() {
+            fetch('/buy/{{item.id}}').then(function(response) {
+                return response.json();
+            }).then(function(session) {
+                // get "session_id" from json
+                let sessionId = session.session_id;
+                // redirect to stripe checkout page
+                stripe.redirectToCheckout({ sessionId: sessionId });
+            }).then(function(result) {
+                // If `redirectToCheckout` fails due to a browser or network
+                // error, you should display the localized error message to your
+                // customer using `error.message`.
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+        });
+        
+    </script>
 </head>
 <body>
-    <p>{{message}}</p>
+    <h2>{{item.name}}</h2>
+    <p>{{item.description}}</p>
+    <p>{{item.price}} руб.</p>
+    <button id="buy">Купить</button>
 </body>
 </html>
