@@ -34,7 +34,7 @@ class Item(models.Model):
         stripe_price = stripe.Price.create(
             product=stripe_product['id'],
             unit_amount=self.price,
-            currency='usd',
+            currency='rub',
         )
         self.stripe_price_id = stripe_price['id']
         super(Item, self).save(*args, **kwargs)
@@ -57,7 +57,9 @@ class Discount(models.Model):
         #create stripe coupon
         stripe_coupon = stripe.Coupon.create(
             percent_off=self.percent_off,
-            duration='once',
+            duration='forever',
+            name=self.name,
+            currency='rub',
         )
         self.stripe_coupon_id = stripe_coupon['id']
         super(Discount, self).save(*args, **kwargs)
@@ -83,6 +85,7 @@ class Tax(models.Model):
             display_name=self.display_name,
             description=self.description,
             percentage=self.percentage,
+            currency='rub',
         )
         self.stripe_tax_rate_id = stripe_tax_rate['id']
         super(Tax, self).save(*args, **kwargs)
