@@ -17,6 +17,7 @@ LANG_CODE=ru-RU
 DATABASE=
 ```
 **Внимание!**
+
 В случае использования
 ```
 DB_ENGINE=django.db.backends.sqlite3
@@ -24,6 +25,7 @@ DB_ENGINE=django.db.backends.sqlite3
 поля кроме *DB_NAME* осталять пустыми
 
 **Alert!**
+
 In case of use
 ```
 DB_ENGINE=django.db.backends.sqlite3
