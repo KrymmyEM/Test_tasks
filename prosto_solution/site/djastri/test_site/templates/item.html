@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{{item.name}}</title>
-    <script src="https://js.stripe.com/v3/">
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
         // after click buy button get session id from server and redirect to stripe checkout page
         document.getElementById("buy").addEventListener("click", function() {
             fetch('/buy/{{item.id}}').then(function(response) {
