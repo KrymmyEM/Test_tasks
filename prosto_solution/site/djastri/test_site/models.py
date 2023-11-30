@@ -94,9 +94,10 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     discounts = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True)
     tax = models.ForeignKey(Tax, on_delete=models.SET_NULL, null=True)
-    sell = models.BooleanField(null=False, default=False)
+    to_action = models.BooleanField(null=False, default=False)
     stripe_checkout_session_id = models.CharField(max_length=500, null=True, unique=True)
     stripe_payment_intent_id = models.CharField(max_length=500, null=True, unique=True)
+    orderitem_set = models.ManyToManyField(Item, through='OrderItem')
 
     def __str__(self):
         return str(self.pk) + "|" + str(self.user) 
@@ -111,7 +112,7 @@ class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(validators=[
         MinValueValidator(1)
-    ])
+    ], default=1)
 
     def __str__(self):
         return str(self.id)
