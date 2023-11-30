@@ -27,7 +27,7 @@ class Item(models.Model):
         return str(self.pk) + "|" + str(self.name)
 
     def save(self,*args, **kwargs):
-        stripe.api_key = settings.STRIPE_SECRET_KEY
+        stripe.api_key = settings.SECRET_KEY_STRIPE
         #create stripe product
         stripe_product = stripe.Product.create(name=self.name)
         self.stripe_product_id = stripe_product['id']
@@ -55,7 +55,7 @@ class Discount(models.Model):
         return str(self.pk) + "|" + str(self.name)
 
     def save(self,*args, **kwargs):
-        stripe.api_key = settings.STRIPE_SECRET_KEY
+        stripe.api_key = settings.SECRET_KEY_STRIPE
         #create stripe coupon
         stripe_coupon = stripe.Coupon.create(
             percent_off=self.percent_off,
@@ -81,7 +81,7 @@ class Tax(models.Model):
         return str(self.pk) + "|" + str(self.display_name)
 
     def save(self,*args, **kwargs):
-        stripe.api_key = settings.STRIPE_SECRET_KEY
+        stripe.api_key = settings.SECRET_KEY_STRIPE
         #create stripe tax rate
         stripe_tax_rate = stripe.TaxRate.create(
             display_name=self.display_name,
