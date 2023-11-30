@@ -7,17 +7,19 @@ from django.contrib.auth.models import AbstractUser
 import stripe
 # Create your models here.
 
+#TODO: ADD All verbonse_name on russian language in editable fields
+
 #user model use abstract user
 class User(AbstractUser):
     pass
 
 
 class Item(models.Model):
-    name = models.CharField(max_length=500, null=False)
-    description = models.TextField(null=True)
+    name = models.CharField(max_length=500, null=False, verbose_name='Наименование')
+    description = models.TextField(null=True, verbose_name='Описание')
     price = models.IntegerField(null=False, validators=[
         MinValueValidator(0)
-    ])
+    ], verbose_name='Цена')
     stripe_product_id = models.CharField(max_length=500, null=True, editable=False)
     stripe_price_id = models.CharField(max_length=500, null=True, editable=False)
 
@@ -42,11 +44,11 @@ class Item(models.Model):
 
 # discount model, name, percent_off, stripe_coupone_id
 class Discount(models.Model):
-    name = models.CharField(max_length=500, null=False)
+    name = models.CharField(max_length=500, null=False, verbose_name='Наименование')
     percent_off = models.IntegerField(null=False, validators=[
         MaxValueValidator(100),
         MinValueValidator(0)
-    ])
+    ], verbose_name='Процент скидки')
     stripe_coupon_id = models.CharField(max_length=500, null=True, editable=False)
 
     def __str__(self):
@@ -67,13 +69,13 @@ class Discount(models.Model):
 
 # tax model, display_name, percentage (0..100), description (null True), stripe_tax_rate_id
 class Tax(models.Model):
-    display_name = models.CharField(max_length=500, null=False)
+    display_name = models.CharField(max_length=500, null=False, verbose_name='Отображаемое имя')
     percentage = models.IntegerField(null=False, validators=[
         MaxValueValidator(100),
         MinValueValidator(0)
-    ])
-    description = models.TextField(null=True)
-    stripe_tax_rate_id = models.CharField(max_length=500, null=True)
+    ], verbose_name='Процент')
+    description = models.TextField(null=True, verbose_name='Описание')
+    stripe_tax_rate_id = models.CharField(max_length=500, null=True, editable=False)
 
     def __str__(self):
         return str(self.pk) + "|" + str(self.display_name)
@@ -91,13 +93,13 @@ class Tax(models.Model):
         super(Tax, self).save(*args, **kwargs)
 
 
-# order model, uuid, discounts, tax, sell, stripe_checkout_session_id, stripe_payment_intent_id
+# order model, uuid, discounts, tax, in_work, stripe_checkout_session_id, stripe_payment_intent_id
 class Order(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False, primary_key=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    discounts = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True)
-    tax = models.ForeignKey(Tax, on_delete=models.SET_NULL, null=True)
-    to_action = models.BooleanField(null=False, default=False)
+    discounts = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True, verbose_name='Скидка')
+    tax = models.ForeignKey(Tax, on_delete=models.SET_NULL, null=True, verbose_name='Налог')
+    in_work = models.BooleanField(null=False, default=False, verbose_name='В работе')
     stripe_checkout_session_id = models.CharField(max_length=500, null=True, unique=True, editable=False)
     stripe_payment_intent_id = models.CharField(max_length=500, null=True, unique=True, editable=False)
     orderitem_set = models.ManyToManyField(Item, through='OrderItem')
@@ -111,11 +113,11 @@ class Order(models.Model):
 
 # order_item model, order, item, quantity
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, verbose_name='Предмет')
     quantity = models.IntegerField(validators=[
         MinValueValidator(1)
-    ], default=1)
+    ], default=1, verbose_name='Количество')
 
     def __str__(self):
         return str(self.id)
