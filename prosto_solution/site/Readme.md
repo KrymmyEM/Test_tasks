@@ -6,6 +6,7 @@ For normal work site you need make .env file in django project directory or use 
 ```
 SECRET_KEY_DJANGO=write_here_secret_key
 SECRET_KET_STRIPE=
+PUBLIC_KEY_STRIPE=
 DEBUG=1
 DJANGO_ALLOWED_HOSTS=0.0.0.0 *
 DB_ENGINE=django.db.backends.sqlite3 
