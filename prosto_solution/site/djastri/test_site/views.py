@@ -66,7 +66,7 @@ class MakeOrderView(View):
             checkout_session = stripe.checkout.Session.create(
                 line_items = line_items,
                 mode = "payment",
-                return_url = "http://127.0.0.1:8000/",
+                cancel_url = "http://127.0.0.1:8000/",
                 success_url = "http://127.0.0.1:8000/",
                 coupon = order.discounts.stripe_coupon_id if order.discounts else None,
                 tax_rates = [order.tax.stripe_tax_rate_id] if order.tax else None,
@@ -130,7 +130,7 @@ class ItemOrderView(View):
         checkout_session = stripe.checkout.Session.create(
             line_items=line_items,
             mode='payment',
-            return_url = "http://127.0.0.1:8000/",
+            cancel_url = "http://127.0.0.1:8000/",
             success_url = "http://127.0.0.1:8000/",
             coupon = order.discounts.stripe_coupon_id if order.discounts else None,
             tax_rates = [order.tax.stripe_tax_rate_id] if order.tax else None,
