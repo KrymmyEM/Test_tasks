@@ -10,7 +10,7 @@ import stripe
 from test_site.models import Item, Order, OrderItem
 
 def error404Json(request, message) -> JsonResponse:
-    response = JsonResponse()
+    respons = JsonResponse({"status": "Error"})
     response.status_code = 404
     response.content = json.dumps({"status": "Error", "message": message})
     return responses
@@ -36,7 +36,7 @@ def check_and_create_order(request: HttpRequest) -> dict:
 
 class MakeOrderView(View):
     def get(self, request) -> JsonResponse:
-        response = JsonResponse()
+        response = JsonResponse({"status": "OK"})
         uuid_order = request.COOKIES.get("orduuid", None)
         if not uuid_order:
             response = error404Json(response, "Order not found")
@@ -83,7 +83,7 @@ class MakeOrderView(View):
 
 class AddItemView(View):
     def post(self, request, id: int) -> JsonResponse:
-        response = JsonResponse()
+        response = JsonResponse({"status": "OK"})
         uuid_order = check_and_create_order(request).get("orduuid")
         order = Order.objects.get(uuid=uuid_order)
         item_object = None
