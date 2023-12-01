@@ -5,8 +5,9 @@ services:
     image: krymmy/test_prostosol_site
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - static_volume:/home/app/site/web/staticfiles
-      - media_volume:/home/app/site/web/mediafiles
+      - static_volume:/home/app/site/staticfiles
+      - media_volume:/home/app/site/mediafiles
+      - database_volume:/home/app/site/database
     expose:
       - 8000:8000
     env_file:
@@ -23,7 +24,7 @@ services:
     build: ./nginx
     volumes:
       - static_volume:/home/app/site/staticfiles
-      - media_volume:/home/app/site/web/mediafiles
+      - media_volume:/home/app/site/mediafiles
     ports:
       - 80:80
     depends_on:
@@ -33,3 +34,4 @@ volumes:
   postgres_data:
   static_volume:
   media_volume:
+  database_volume:
