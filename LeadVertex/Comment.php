@@ -18,6 +18,11 @@ class Comment
         return $this->author;
     }
 
+    public function getComment(string $text)
+    {
+        return $this->text;
+    }
+
     public function setComment(string $text)
     {
         $this->text = $text;
