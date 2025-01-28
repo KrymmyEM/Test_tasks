@@ -24,9 +24,9 @@ class ARI_Client():
         self.session = aiohttp.ClientSession(headers=self.headers)
         self.websocket = websockets.connect(self.url+f"/events?app={self.app}&api_key={self.token}")
 
-    async def _post(self, url, data):
+    async def _post(self, url, data = {}):
         async with self.session as session:
-            async with session.post(url, json=data) as response:
+            async with session.post(url, params=data) as response:
                 if response.status != 200:
                     raise Exception("Status code: " + str(response.status))
                 return await response.json()
@@ -34,6 +34,13 @@ class ARI_Client():
     async def _get(self, url, data: dict = {}):
         async with self.session as session:
             async with session.get(url, params=data) as response:
+                if response.status != 200:
+                    raise Exception("Status code: " + str(response.status))
+                return await response.json()
+    
+    async def _delete(self, url, data = {}):
+        async with self.session as session:
+            async with session.delete(url, params=data) as response:
                 if response.status != 200:
                     raise Exception("Status code: " + str(response.status))
                 return await response.json()
@@ -73,6 +80,11 @@ class ARI_Client():
         if channelId:
             return Channel(result)
         return [Channel(channel) for channel in result]
+    
+    async def delete_channel(self, channel: Channel):
+         url = self.url + "/channels" + "/" + channel.id
+         self._delete(url,  {"api_key":self.token})
+         
     
     async def __aenter__(self):
         return self.websocket

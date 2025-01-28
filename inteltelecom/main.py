@@ -16,8 +16,7 @@ from yandex_speech_api import YandexSpeechApi, TokenTypes
 CHANNEL_ACTIONS=['StasisStart', 'PlaybackStarted', 'PlaybackFinished', 'RecordingStarted', 'RecordingFinished', 'StasisEnd']
 
 async def main():
-    algoritm = {
-        [
+    algoritm = [
             {
                 "mode":"playback", 
                 "data": {
@@ -45,14 +44,20 @@ async def main():
                     "text": "Спасибо за информацию"
                 }
             },
+            {
+                "mode": "hangup",
+                "data": {}
+            }
         ]
-    }
     call_to = input("Call to:")
     client = ARI_Client(configure.ASTERISK_ARI_URL, configure.ASTERISK_ARI_LOGIN, configure.ASTERISK_ARI_PASSWORD, configure.ASTERISK_APP_NAME)
     yandex_speech_api = YandexSpeechApi(configure.YANDEX_TOKEN, configure.YANDEX_FOLDERID, TokenTypes[configure.TOKEN_TYPE])
     channel = None
     step = 0
     async with client as websocket:
+        if step > len(algoritm):
+            client.delete_channel(channel)
+            return
         channel = await client.channels(CallConfig(
             endpoint=configure.ASTERISK_CALL_ENDPOINT,
             extension=call_to
@@ -70,6 +75,8 @@ async def main():
             if message_type == "StasisStart":
                 if not channel:
                     channel = Channel(message.get("channel"))
+            elif message_type == "StasisEnd":
+                break
             
             elif message_type == "PlaybackFinished":
                 step += 1
@@ -98,3 +105,6 @@ async def main():
                     record_data,
                     {"channelId": channel.id}
                 )
+            elif mode == "hangup":
+                client.delete_channel(channel)
+                break
