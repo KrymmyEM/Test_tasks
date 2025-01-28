@@ -1,7 +1,6 @@
 from os import getenv
 from dotenv import load_dotenv
 
-
 DEBUG = load_dotenv(".env")
 
 
@@ -15,4 +14,8 @@ PLAYBACK_STORAGE=getenv("PLAYBACK_STORAGE")
 
 RECORD_STORAGE=getenv("RECORD_STORAGE")
 
-YANDEX_API=getenv("YANDEX_API")
+
+YANDEX_TOKEN=getenv("YANDEX_TOKEN")
+YANDEX_FOLDERID=getenv("YANDEX_FOLDERID")
+
+TOKEN_TYPE = getenv("TOKEN_TYPE")
