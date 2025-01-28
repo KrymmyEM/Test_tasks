@@ -48,6 +48,18 @@ class Bridge(BaseModel):
     creationtime: date = Field(..., description="Timestamp when bridge was created")
 
 
+class LiveRecording(BaseModel):
+    name: str = Field(..., description="Base name for the recording")
+    format: str = Field(..., description="Recording format (wav, gsm, etc.)")
+    target_uri: str = Field(..., description="URI for the channel or bridge being recorded")
+    state: RecordingState = Field(..., description="State of the recording", 
+                                  description="State of the recording. Values can be 'queued', 'recording', 'paused', 'done', 'failed', or 'canceled'")
+    duration: Optional[int] = Field(None, description="Duration in seconds of the recording")
+    talking_duration: Optional[int] = Field(None, description="Duration of talking, in seconds, detected in the recording.")
+    silence_duration: Optional[int] = Field(None, description="Duration of silence, in seconds, detected in the recording.")
+    cause: Optional[str] = Field(None, description="Cause for recording failure if failed")
+
+
 class StoredRecording(BaseModel):
     name: str = Field(..., description="Name of the stored recording")
     format: str = Field(..., description="Format of the stored recording")
