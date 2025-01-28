@@ -1,3 +1,5 @@
 pydantic
 requests
 aiohttp
+websockets
+yandex-speechkit
