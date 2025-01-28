@@ -32,6 +32,8 @@ class Asterisk():
     async def _get(self, url, data: dict = {}):
         async with self.session as session:
             async with session.get(url, params=data) as response:
+                if response.status != 200:
+                    raise Exception("Status code: " + str(response.status))
                 return await response.json()
 
 
