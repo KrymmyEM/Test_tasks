@@ -8,7 +8,7 @@ from typing import Union
 from send_models import *
 from models import *
 
-class Asterisk():
+class ARI_Client():
 
     def __init__(self, url: str, login: str, password: str, app: str):
         self.url = url
