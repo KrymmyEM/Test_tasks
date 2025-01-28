@@ -10,7 +10,7 @@ class TokenTypes(enum.Enum):
 
 class YandexSpeechApi:
     """
-    Это достаточно старый код, потому и первая версия.
+    Есть старый код 4 летней давности
     """
 
     def __init__(self, token, folder_id, token_type: TokenTypes = TokenTypes.API):
@@ -27,52 +27,59 @@ class YandexSpeechApi:
         }
         self.session = aiohttp.ClientSession(headers=self.headers)
 
-    def recognize(self, audioFile: Union[str, Path]):
+    def recognize(self, audioFile: Union[str, Path], output: Union[str, Path]):
+        URL = "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize"
 
-        URL = "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize?"
-        with open(f"{audioFile}", "rb") as f:
+        # Открываем аудиофайл для чтения в бинарном режиме
+        with open(audioFile, "rb") as f:
             data = f.read()
 
-        headers = self.headers
+        # Формируем параметры запроса
+        params = {
+            "topic": "general",
+            "folderId": self.folder_id,
+            "lang": "ru-RU",
+            "format": "lpcm",
+            "sampleRateHertz": 48000
+        }
 
-        params = "&".join([
-            "topic=general",
-            "folderId=%s" % self.folder_id,
-            "lang=ru-RU",
-            "format=lpcm",
-            "sampleRateHertz=48000"
-        ])
+        # Выполняем POST-запрос
+        response = requests.post(URL, params=params, headers=self.headers, data=data)
 
-        url = request.Request(URL + "%s" % params, data=data, headers=headers)
-        responseData = request.urlopen(url).read().decode('UTF-8')
-        if resp.status_code != 200:
-            return False
-        result = json.loads(responseData)
+        # Проверяем успешность запроса
+        if response.status_code != 200:
+            raise Exception(f"Request failed with status code {response.status_code}: {response.text}")
 
-        return result["result"]
+        # Декодируем JSON-ответ
+        result = response.json()
 
-    def synthesize(self, text: str, output: Union[str, Path] = "output"):
+        # Записываем результат в выходной файл
+        with open(output, "w") as file:
+            file.write(result["result"])
+
+        return True
+
+
+    def synthesize(self, text: str, output: Union[str, Path] = "output", audio_format="oggopus"):
 
         URL = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize'
 
-        headers = self.headers
-
-        data = parse.urlencode({
-            'text': text,
+        data = {
+            'ssml'if ssml else 'text': text,
             'lang': 'ru-RU',
             'folderId': self.folder_id,
-            'format': 'lpcm',
-            'sampleRateHertz': 48000,
-        }).encode()
+            'format': audio_format,
+            'sampleRateHertz': 16000
+        }
 
-        req = request.Request(URL, data, headers)
+        response = requests.post(URL, data=data, headers=self.headers)
 
-        resp: requests.Response = request.urlopen(req)
-        if resp.status_code != 200:
+        if response.status_code != 200:
             return False
 
-        with open(output, "wb") as f:
-            for audio_content in resp:
-                f.write(audio_content)
+        if response.status_code == 200:
+            with open(output, "wb") as f:
+                for audio_content in response:
+                    f.write(audio_content)
 
         return True
