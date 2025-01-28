@@ -45,6 +45,8 @@ class YandexSpeechApi:
 
         url = request.Request(URL + "%s" % params, data=data, headers=headers)
         responseData = request.urlopen(url).read().decode('UTF-8')
+        if resp.status_code != 200:
+            return False
         result = json.loads(responseData)
 
         return result["result"]
@@ -64,7 +66,10 @@ class YandexSpeechApi:
         }).encode()
 
         req = request.Request(URL, data, headers)
-        resp = request.urlopen(req)
+
+        resp: requests.Response = request.urlopen(req)
+        if resp.status_code != 200:
+            return False
 
         with open(output, "wb") as f:
             for audio_content in resp:
