@@ -2,5 +2,4 @@ pydantic
 requests
 aiohttp
 websockets
-yandex-speechkit
 python-dotenv
